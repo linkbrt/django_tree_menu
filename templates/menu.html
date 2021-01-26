@@ -1,0 +1,21 @@
+<div class="btn-group">
+  {% for category in menu %}
+    <a class="btn btn-secondary {% ifequal current_path category.get_absolute_url %}active{% endifequal %}" href="{% url 'show_category' category.slug %}" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
+      {{ category.name }}
+    </a>
+    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split {% ifequal current_path category.get_absolute_url %}active show{% endifequal %}" data-bs-toggle="dropdown" aria-expanded="true">
+      <span class="visually-hidden">
+        Toggle Dropdown
+      </span>
+    </button>
+    <ul class="dropdown-menu {% ifequal current_path category.get_absolute_url %}show{% endifequal %}">
+    {% for item in category.items.all %}
+      <li>
+        <a class="dropdown-item {% ifequal current_path item.get_absolute_url %}active{% endifequal %}" href="{% url 'show_item' category.slug item.slug %}">
+          {{ item.name }}
+        </a>
+      </li>
+    {% endfor %}
+    </ul>
+  {% endfor %}
+</div>

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load tags %}
+    {% draw_menu "test" %}
+    <li>Name: {{ item.name }}</li>
+    <li>Slug: {{ item.slug }}</li>
+    <li>Title: {{ item.title }}</li>
+{% endblock %}

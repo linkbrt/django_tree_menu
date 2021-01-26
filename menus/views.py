@@ -1,3 +1,23 @@
-from django.shortcuts import render
+from menus.models import MenuCategory, MenuItem
+from django.shortcuts import get_object_or_404, render
 
-# Create your views here.
+
+def index(request):
+    return render(request, 'index.html')
+
+
+def show_category(request, slug):
+    category = get_object_or_404(MenuCategory, slug=slug)
+    return render(request, "category.html", {
+        'category': category,
+        'current_path': request.get_full_path(),
+    })
+
+
+def show_item(request, category_slug, item_slug):
+    item = get_object_or_404(MenuItem,
+                             slug=item_slug,
+                             category__slug=category_slug)
+    return render(request, 'item.html', {
+        'item': item,
+    })
