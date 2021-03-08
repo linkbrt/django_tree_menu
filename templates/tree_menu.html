@@ -1,0 +1,8 @@
+{% for item in arr %}
+    <li>{{ item.name }}</li>
+    {% if item.have_childs %}
+        <ul>
+            {% include "tree_menu.html" with arr=item.childs.all %}
+        </ul>
+    {% endif %}
+{% endfor %}

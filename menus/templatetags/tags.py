@@ -9,6 +9,6 @@ register = Library()
 def draw_menu(context, slug):
     menu = Menu.objects.get(slug=slug)
     return {
-        'menu': menu.categories.all(),
+        'menu': menu,
         'current_path': context['request'].get_full_path(),
     }

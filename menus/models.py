@@ -5,6 +5,7 @@ class Menu(models.Model):
 
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True)
+    # items = models.ManyToManyField('MenuItem', related_name='menu')
 
     def __str__(self):
         return self.name
@@ -14,25 +15,9 @@ class Menu(models.Model):
         verbose_name_plural = 'Меню'
 
 
-class MenuCategory(models.Model):
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=100, unique=True)
-    menu = models.ForeignKey(
-        Menu,
-        on_delete=models.SET_NULL,
-        related_name='categories',
-        blank=True, null=True
-    )
-
-    def __str__(self) -> str:
-        return self.name
-
-    def get_absolute_url(self) -> str:
-        return f'/{self.slug}/'
-
-    class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+class MenuItemChoises(models.Choices):
+    ITEM = 'item'
+    CATEGORY = 'category'
 
 
 class MenuItem(models.Model):
@@ -42,15 +27,22 @@ class MenuItem(models.Model):
         max_length=255,
         blank=True, null=True
     )
-    category = models.ForeignKey(
-        MenuCategory,
-        on_delete=models.SET_NULL,
-        related_name='items',
-        blank=True, null=True
+    type = models.CharField(
+        max_length=10,
+        choices=MenuItemChoises.choices, default=MenuItemChoises.ITEM
     )
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE, related_name='items', null=True, blank=True)
+    parent = models.ForeignKey('MenuItem', on_delete=models.CASCADE, null=True, blank=True, related_name='childs')
 
     def __str__(self) -> str:
         return self.name
 
     def get_absolute_url(self) -> str:
-        return f'/{self.category.slug}/{self.slug}/'
+        return f'/{self.menu.slug}/{self.slug}/'
+    
+    def have_childs(self):
+        if self.childs.all():
+            return True
+        return False
+
+
